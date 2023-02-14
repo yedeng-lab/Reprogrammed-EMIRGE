@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Time     : 2020/11/17 16:58
 # @Author   : Danrui Wang
@@ -17,10 +17,7 @@ def abun_calcu(in_seq, in_bam, in_sample, out_abun):
         data = f1.readlines()
         for line in data:
             if line.startswith(">"):
-                line = line.replace(">", "").replace("\n","")
-                symb = [" ", "=", ".", "-", "|", ","]
-                for s in symb:
-                    line = line.replace(s, "_")
+                line = line.replace(">", "",1).replace("\n","")
                 references.append(line)
     #Input the txt file of sample names
     samples = []
@@ -39,14 +36,10 @@ def abun_calcu(in_seq, in_bam, in_sample, out_abun):
         for line in data:
             seq = line.split("\t")[0]
             ref = line.split("\t")[2]
-            symb = [" ", "=", ".", "-", "|", ","]
-            for s in symb:
-                ref = ref.replace(s, "_")
-            name_h = ref
             # print(name_h)
             for i in samples:
                 if i in seq:
-                    abun.at[name_h, i] += 1
+                    abun.at[ref, i] += 1
     # Output the abundance in txt formate
     a = os.getcwd()
     abun.to_csv(out_abun, sep="\t", index=True)
@@ -56,17 +49,10 @@ def shorten_fasta(in_fasta, out_fasta):
         with open(out_fasta, mode="w", encoding="utf-8") as w1:
             data = f1.readlines()
             length = len(data)
-            symb = [" ", "=", ".", "-", "|", ","]
-            ref = data[0]
-            for s in symb:
-                ref = ref.replace(s, "_")
-            w1.write(ref)
+            w1.write(data[0])
             for n in range(1,length-1):
                 if data[n].startswith(">"):
-                    ref = data[n]
-                    for s in symb:
-                        ref = ref.replace(s, "_")
-                    w1.write("\n"+ref)
+                    w1.write("\n"+data[n])
                 else:
                     line = data[n].replace("\n",'')
                     w1.write(line)
