@@ -1170,6 +1170,12 @@ class EM(object):
         denom = numpy.asarray(self.posteriors[-1].tocsc().sum(axis=0)).flatten()
         # only divide by nonzero denom -- this is taken care of by coo format!
         self.posteriors[-1].data = self.posteriors[-1].data / denom[(self.posteriors[-1].col,)]  # index out denom with column indices from coo format.
+        
+        # substitute nan with zero--revised by ZB
+        num_nans = numpy.count_nonzero(numpy.isnan(self.posteriors[-1].data))
+        self.posteriors[-1].data = numpy.nan_to_num(self.posteriors[-1].data)
+        sys.stderr.write("Number of NaNs in posteriors replaced for iteration %02d:%d\n"%(self.iteration_i,num_nans))
+        output_postpriors_data = file(os.path.join(self.iterdir,"%s.%02d.txt"%("postpriors.afnz",self.iteration_i)), 'w')
 
         # convert to csc format for storage and use in self.calc_prior later.
         self.posteriors[-1] = self.posteriors[-1].tocsc()
