@@ -146,7 +146,7 @@ def main(argv=sys.argv[1:]):
     parser.add_option(
         "-m", "--min-len", dest="min_len", metavar="LEN", type="int",
         default=1200,
-        help="minimum reference sequence length, no less than 1024 (default = %default)"
+        help="minimum reference sequence length (default = %default)"
     )
     parser.add_option(
         "-M", "--max-len", dest="max_len", metavar="LEN", type="int",
